@@ -3,7 +3,7 @@ import React from 'react';
 
 const Navbar = () => {
   return (
-    <header className="text-gray-400 bg-transparent body-font">
+    <header className="text-gray-500 bg-transparent body-font">
       <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
         <a href="/" className="flex title-font font-medium items-center text-white mb-4 md:mb-0">
           <svg
@@ -18,7 +18,7 @@ const Navbar = () => {
           >
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
           </svg>
-          <span className="ml-3 text-xl">Dev-Blogs</span>
+          <span className="ml-3 text-xl">Tailblocks</span>
         </a>
         <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
           <a href="/" className="mr-5 hover:text-white">First Link</a>
@@ -26,10 +26,10 @@ const Navbar = () => {
           <a href="/" className="mr-5 hover:text-white">Third Link</a>
           <a href="/" className="mr-5 hover:text-white">Fourth Link</a>
         </nav>
-        <Link href={"/user/signup"} className="inline-flex items-center font-semibold mx-3 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0">
+        <Link href={"/user/signup"} className="inline-flex items-center font-semibold border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0">
           Sign up
         </Link>
-        <Link href={"/user/login"} className="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0">
+        <Link href={"/user/login"} className="inline-flex items-center bg-gray-800 border-0 py-1 px-5 mx-4 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0">
           Login
           <svg
             fill="none"

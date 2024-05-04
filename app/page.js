@@ -1,76 +1,27 @@
+import Blog_card from "@/components/Blog_card";
 import Image from "next/image";
+import { MongoClient } from "mongodb";
 
 export default function Home() {
 
   const authenticated = true;
+  const uri = `mongodb+srv://dev-sadisatsowala:UsEXQKFSm7iEYaaE@cluster0.y5ndt9w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+  console.log(uri);
+  const client = new MongoClient(uri);
+
 
   return (
     <>
-      <div className="container flex flex-col justify-center items-center py-28 mt-9">
+      <div className="flex flex-col mx-auto justify-center items-center py-10 min-h-[80vh]">
         <h1 className="text-8xl text-stone-300 font-extrabold">Welcome to Dev-Blogs</h1>
-        <h2 className="text-stone-500 text-3xl tracking-wide mt-4 font-semibold hover:text-stone-300 transition-all">One of the center for all creators to meet</h2>
+        <h2 className="text-stone-500 text-3xl tracking-wide mt-4 font-semibold hover:text-stone-300 transition-all">One of the centers for all creators to meet</h2>
       </div>
 
-      {authenticated ? <section class="text-gray-600 body-font">
-        <div class="container px-5 py-24 mx-auto">
-          <div class="flex flex-wrap -mx-4 -my-8">
-            <div class="py-8 px-4 lg:w-1/3">
-              <div class="h-full flex items-start">
-                <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
-                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">Jul</span>
-                  <span class="font-medium text-lg text-gray-800 title-font leading-none">18</span>
-                </div>
-                <div class="flex-grow pl-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">CATEGORY</h2>
-                  <h1 class="title-font text-xl font-medium text-gray-900 mb-3">The 400 Blows</h1>
-                  <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p>
-                  <a class="inline-flex items-center">
-                    <img alt="blog" src="https://dummyimage.com/103x103" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center"></img>
-                      <span class="flex-grow flex flex-col pl-3">
-                        <span class="title-font font-medium text-gray-900">Alper Kamu</span>
-                      </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="py-8 px-4 lg:w-1/3">
-              <div class="h-full flex items-start">
-                <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
-                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">Jul</span>
-                  <span class="font-medium text-lg text-gray-800 title-font leading-none">18</span>
-                </div>
-                <div class="flex-grow pl-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">CATEGORY</h2>
-                  <h1 class="title-font text-xl font-medium text-gray-900 mb-3">Shooting Stars</h1>
-                  <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p>
-                  <a class="inline-flex items-center">
-                    <img alt="blog" src="https://dummyimage.com/102x102" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center"></img>
-                      <span class="flex-grow flex flex-col pl-3">
-                        <span class="title-font font-medium text-gray-900">Holden Caulfield</span>
-                      </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="py-8 px-4 lg:w-1/3">
-              <div class="h-full flex items-start">
-                <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
-                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">Jul</span>
-                  <span class="font-medium text-lg text-gray-800 title-font leading-none">18</span>
-                </div>
-                <div class="flex-grow pl-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">CATEGORY</h2>
-                  <h1 class="title-font text-xl font-medium text-gray-900 mb-3">Neptune</h1>
-                  <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p>
-                  <a class="inline-flex items-center">
-                    <img alt="blog" src="https://dummyimage.com/101x101" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center"></img>
-                      <span class="flex-grow flex flex-col pl-3">
-                        <span class="title-font font-medium text-gray-900">Henry Letham</span>
-                      </span>
-                  </a>
-                </div>
-              </div>
-            </div>
+
+      {authenticated ? <section className="text-gray-600 body-font">
+        <div className="container px-28 py-24 mx-auto">
+          <div className="flex flex-wrap -mx-4 -my-8">
+            <Blog_card />
           </div>
         </div>
       </section> : <h1 className="text-white"> Please sign up to see the content</h1>}
