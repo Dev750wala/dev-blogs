@@ -1,14 +1,10 @@
 import Blog_card from "@/components/Blog_card";
 import Image from "next/image";
-import { MongoClient } from "mongodb";
+import { findAllBlogs } from "@/utils/find-all-blogs";
 
 export default function Home() {
 
   const authenticated = true;
-  const uri = `mongodb+srv://dev-sadisatsowala:UsEXQKFSm7iEYaaE@cluster0.y5ndt9w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-  console.log(uri);
-  const client = new MongoClient(uri);
-
 
   return (
     <>
