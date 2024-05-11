@@ -2,8 +2,10 @@ import { createJwtToken } from "@/utils/jwt-token-create";
 import USER from "@/utils/user-model";
 import { NextResponse } from "next/server";
 import { dbConnect, dbDisconnect } from "@/utils/connnectionToDb";
+import { headers } from "next/headers";
 
 export async function POST(request, response) {
+    await dbConnect();
     const data = await request.json();
 
     const errors = {
@@ -11,18 +13,18 @@ export async function POST(request, response) {
         email: "",
     }
     // console.log(`${uri} !!!!!!!!!!!!!!!!!devdevdevdev`);
-    dbConnect();
+    
     try {
         const user = await USER.findOne({ email: data.email });
         if (user) {
-            errors.email = "Email already exists";
+            errors.email = "Email already in use. Please choose another.";
             return NextResponse.json({errors});
         }
         const userWithSameUsername = await USER.findOne({
             username: data.username,
         });
         if(userWithSameUsername) {
-            errors.username = "oops! username is already taken...";
+            errors.username = "Username is already taken. Please choose another.";
             return NextResponse.json({errors});
         }
         const newUser = await USER.create({
@@ -31,13 +33,11 @@ export async function POST(request, response) {
             password: data.password,
         });
         const token = createJwtToken(newUser._id);
-        
-        dbDisconnect();
 
         const cookieOptions = {
             httpOnly: true,
             path: '/',
-            maxAge: 3600,
+            maxAge: 360000000,
         };
         // response.setHeader("Set-Cookie", `jwt=${token}; ${Object.entries(cookieOptions).map(([key, value]) => `${key}=${value}`).join('; ')}`);
         const newUserAndToken = {
@@ -46,10 +46,20 @@ export async function POST(request, response) {
             token: token,
         }
         
-        return NextResponse.json({newUserAndToken});
+        return NextResponse.json({
+            newUserAndToken,
+            headers: {
+                "Set-Cookie": [
+                    `jwt=${token}; ${Object.entries(cookieOptions).map(([key, value]) => `${key}=${value}`).join('; ')}`,
+                ],
+                "Content-Type": "application/json",
+            }
+        });
 
     } catch (error) {
         console.error(error);
         return NextResponse.error(new Error("Failed to create user"));
+    } finally {
+        dbDisconnect();
     }
 }

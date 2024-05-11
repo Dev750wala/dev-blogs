@@ -14,7 +14,6 @@ const page = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    // console.log(data);
     const rawResponse = await fetch("/api/users/create", {
       method: "POST",
       headers: {
@@ -22,22 +21,25 @@ const page = () => {
       },
       body: JSON.stringify(data),
     });
+    console.log(`${rawResponse}`);
     const content = await rawResponse.json();
-    
-    if(content.errors) {
-        if(content.errors.username === "") {
-            setError("email", {
-                message: content.errors.email,
-            })
-        } else {
-            setError("username", {
-                message: content.errors.username,
-            })
-        }
-    } else if(content.newUserAndToken) {
-        localStorage.setItem("token", content.newUserAndToken.token);
-        localStorage.setItem("user", JSON.stringify(content.newUserAndToken.user));
-        window.location.href = "/";
+
+    if (content.errors) {
+      if (content.errors.username === "") {
+        setError("email", {
+          message: content.errors.email,
+        });
+      } else {
+        setError("username", {
+          message: content.errors.username,
+        });
+      }
+    } else if (content.newUserAndToken) {
+      // localStorage.setItem("token", content.newUserAndToken.token);
+      // localStorage.setItem("username", content.newUserAndToken.username);
+      document.cookie = `token=${content.newUserAndToken.token}; path=/`;
+
+      window.location.href = "/";
     }
 
     console.log(content);
@@ -87,6 +89,11 @@ const page = () => {
                       {errors.username.message}
                     </p>
                   )}
+                  {setError.username && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {setError.username.message}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label
@@ -114,6 +121,11 @@ const page = () => {
                   {errors.email && (
                     <p className="text-red-600 text-sm mt-1">
                       {errors.email.message}
+                    </p>
+                  )}
+                  {setError.email && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {setError.email.message}
                     </p>
                   )}
                 </div>
