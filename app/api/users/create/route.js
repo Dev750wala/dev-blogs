@@ -9,7 +9,7 @@ export async function POST(request, response) {
     const data = await request.json();
 
     const errors = {
-        username: "",
+        // username: "",
         email: "",
     }
     // console.log(`${uri} !!!!!!!!!!!!!!!!!devdevdevdev`);
@@ -20,15 +20,16 @@ export async function POST(request, response) {
             errors.email = "Email already in use. Please choose another.";
             return NextResponse.json({errors});
         }
-        const userWithSameUsername = await USER.findOne({
-            username: data.username,
-        });
-        if(userWithSameUsername) {
-            errors.username = "Username is already taken. Please choose another.";
-            return NextResponse.json({errors});
-        }
+        // const userWithSameUsername = await USER.findOne({
+        //     username: data.username,
+        // });
+        // if(userWithSameUsername) {
+        //     errors.username = "Username is already taken. Please choose another.";
+        //     return NextResponse.json({errors});
+        // }
         const newUser = await USER.create({
-            username: data.username,
+            name: data.name,
+            // username: data.username,
             email: data.email,
             password: data.password,
         });

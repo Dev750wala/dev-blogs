@@ -1,18 +1,31 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-        username: {
+        name: {
             type: String,
             required: true
         },
         email: {
             type: String,
+            unique: true,
             required: true
+        },
+        googleId: {
+            type: String,
+            // default: 'none',
+        },
+        githubId: {
+            type: Number,
+            // default: 0,
+        },
+        oAuthProvider: {
+            type: String,
         },
         password: {
             type: String,
-            required: true
-        }
+            required: true,
+            default: process.env.DEF_PW,
+        },
     }, { timestamps: true }
 )
 

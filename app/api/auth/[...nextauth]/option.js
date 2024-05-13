@@ -1,8 +1,8 @@
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-// import USER from "@/utils/user-model";
-// import { dbConnect, dbDisconnect } from "@/utils/connnectionToDb";
+import USER from "@/utils/user-model";
+import { dbConnect, dbDisconnect } from "@/utils/connnectionToDb";
 
 
 export const options = {
@@ -11,34 +11,78 @@ export const options = {
             name: 'Credentials',
 
             credentials: {
-                usernameOrEmail: { label: "Username", type: "text", placeholder: "jsmith", required: true },
-                password: { label: "Password", type: "password", required: true },
+                usernameOrEmail: { 
+                        label: "Username or Email", 
+                        type: "text", 
+                        placeholder: "jsmith", 
+                        required: true 
+                    },
+                password: { 
+                    label: "Password", 
+                    type: "password", 
+                    placeholder: "●●●●●●●●●●", 
+                    required: true 
+                },
             },
 
             async authorize(credentials) {
                 console.log(credentials);
-                const res = await fetch("/api/users/login", {
-                    method: 'POST',
-                    body: JSON.stringify(credentials),
-                    headers: { "Content-Type": "application/json" }
-                })
-                const user = await res.json();
-                console.log(user);
+                await dbConnect();
+                try {
+                    const foundUser = await USER.findOne({
+                        $or: [
+                            { username: credentials.usernameOrEmail },
+                            { email: credentials.usernameOrEmail }
+                        ]
+                    }).lean().exec();
 
-                // If no error and we have user data, return it
-                if (res.ok && user) {
-                    return user
+                    if (foundUser) {
+                        console.log("User Exists");
+                        //   const match = await bcrypt.compare(
+                        //     credentials.password,
+                        //     foundUser.password
+                        //   );
+
+                        if (credentials.password === foundUser.password) {
+                            console.log("Good Pass");
+                            delete foundUser.password;
+
+                            foundUser["role"] = "Unverified Email";
+                            return foundUser;
+                        }
+                    }
+                } catch (error) {
+                    console.log(error);
                 }
-                // Return null if user data could not be retrieved
-                return null
+                dbDisconnect();
+                return null;
             }
         }),
         GitHubProvider({
-            profile(profile) {
-                console.log(`Github: ${profile}`);
+            async profile(profile) {
+                await dbConnect();
+                console.log(`Github: ${JSON.stringify(profile)}`);
 
                 let userRole = "Github User";
+                
+                try {
+                    const userAlreadyExists = await USER.findOne({ email: profile.email });
 
+                    if (!userAlreadyExists) {
+                        console.log("user does not exist");
+                        const newUser = await USER.create({
+                            name: profile.name,
+                            email: profile.email,
+                            githubId: profile.id,
+                            oAuthProvider: "github",
+                        });
+                    }
+                } catch(error) {
+                    console.log(error);
+                } finally {
+                    dbDisconnect();
+                }
+                
                 return {
                     ...profile,
                     role: userRole,
@@ -48,10 +92,29 @@ export const options = {
             clientSecret: process.env.GITHUB_SECRET,
         }),
         GoogleProvider({
-            profile(profile) {
-                console.log(`Google: ${profile}`);
-
+            async profile(profile) {
+                await dbConnect();
+                console.log(`Google: ${JSON.stringify(profile)}`);
                 let userRole = "Google User";
+
+                try {
+                    
+                    const userAlreadyExists = await USER.findOne({ email: profile.email });
+
+                    if (!userAlreadyExists) {
+                        console.log("user does not exist");
+                        const newUser = await USER.create({
+                            name: profile.name,
+                            email: profile.email,
+                            googleId: profile.sub,
+                            oAuthProvider: "google",
+                        });
+                    }
+                } catch(error) {
+                    console.log(error);
+                } finally {
+                    dbDisconnect();
+                }
 
                 return {
                     ...profile,
