@@ -2,15 +2,15 @@
 
 import CategoryButton from "@/components/CategoryButton";
 import blogCategories from "@/data/blogCategories";
+import Link from "next/link";
 import React, { useState } from "react";
-// import { useRouter } from "next/router";
 
 const NewBlog = () => {
-  const [blog, setBlog] = useState({ title: "", description: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
-  console.log(selectedCategories);
+  const [blog, setBlog] = useState({ title: "", description: "", category: selectedCategories });
+  console.log(blog);
 
   const handleBlogChange = (e) => {
     setBlog({ ...blog, [e.target.name]: e.target.value });
@@ -20,11 +20,14 @@ const NewBlog = () => {
   const handleToggle = (category) => {
     if (selectedCategories.includes(category)) {
       setSelectedCategories(
-        selectedCategories.filter((cat) => cat !== category)
+        selectedCategories.filter((cat) => cat !== category),
       );
+      // setBlog.category = selectedCategories;
     } else {
       setSelectedCategories([...selectedCategories, category]);
+      // setBlog.category = selectedCategories;
     }
+    setBlog({ ...blog, category: selectedCategories });
   };
 
   const handleSubmit = async (e) => {
@@ -110,6 +113,14 @@ const NewBlog = () => {
             }
           </div>
         </div>
+
+        
+        <Link
+          href={"/"}
+          className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-[16px] mr-5 w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
+        >
+          Go back
+        </Link>
 
         <button
           type="submit"

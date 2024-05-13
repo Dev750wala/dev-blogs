@@ -5,10 +5,10 @@ const blogSchema = new mongoose.Schema({
             type: String,
             required: true
         },
-        brief: {
-            type: String,
-            required: true
-        },
+        // brief: {
+        //     type: String,
+        //     required: true
+        // },
         blog: {
             type: String,
             required: true
@@ -20,6 +20,10 @@ const blogSchema = new mongoose.Schema({
         author: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "users"
+        },
+        creationDate: {
+            type: Date,
+            default: new Date().toDateString(),
         }
     }, { timestamps: true },
 );
