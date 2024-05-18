@@ -2,9 +2,9 @@ import { createJwtToken } from "@/utils/jwt-token-create";
 import USER from "@/utils/user-model";
 import { NextResponse } from "next/server";
 import { dbConnect, dbDisconnect } from "@/utils/connnectionToDb";
-import { headers } from "next/headers";
+import create_username from "@/utils/create_username";
 
-export async function POST(request, response) {
+export async function POST(request) {
     await dbConnect();
     const data = await request.json();
 
@@ -29,7 +29,7 @@ export async function POST(request, response) {
         // }
         const newUser = await USER.create({
             name: data.name,
-            // username: data.username,
+            username: create_username(data.name),
             email: data.email,
             password: data.password,
         });

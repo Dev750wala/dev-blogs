@@ -3,7 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import USER from "@/utils/user-model";
 import { dbConnect, dbDisconnect } from "@/utils/connnectionToDb";
-
+import create_username from "@/utils/create_username";
 
 export const options = {
     providers: [
@@ -45,7 +45,7 @@ export const options = {
 
                         if (credentials.password === foundUser.password) {
                             console.log("Good Pass");
-                            delete foundUser.password;
+                            // delete foundUser.password;
 
                             foundUser["role"] = "Unverified Email";
                             return foundUser;
@@ -71,6 +71,7 @@ export const options = {
                     if (!userAlreadyExists) {
                         console.log("user does not exist");
                         const newUser = await USER.create({
+                            username: profile.login,
                             name: profile.name,
                             email: profile.email,
                             githubId: profile.id,
@@ -104,6 +105,7 @@ export const options = {
                     if (!userAlreadyExists) {
                         console.log("user does not exist");
                         const newUser = await USER.create({
+                            username: create_username(profile.name),
                             name: profile.name,
                             email: profile.email,
                             googleId: profile.sub,
