@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import BLOG from "@/utils/blog-model";
 import { getServerSession } from 'next-auth';
-import { options } from "../auth/[...nextauth]/option";
+import { options } from "../../auth/[...nextauth]/option";
 import USER from "@/utils/user-model";
 import { dbConnect, dbDisconnect } from "@/utils/connnectionToDb";
 import { nanoid } from "nanoid";

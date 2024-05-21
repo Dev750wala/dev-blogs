@@ -34,7 +34,7 @@ const NewBlog = () => {
     data.categories = selectedCategories.map((cat) => { return cat });
 
     try {
-      const response = await fetch("/api/new-blog", {
+      const response = await fetch("/api/blogs/new-blog", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

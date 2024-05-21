@@ -40,7 +40,7 @@ export async function POST(request) {
         console.error(error);
         return NextResponse.json({ error: "User not found" });
     } 
-    // finally {
-    //     dbDisconnect();
-    // }
+    finally {
+        dbDisconnect();
+    }
 }

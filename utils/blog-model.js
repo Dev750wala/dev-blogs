@@ -47,15 +47,6 @@ const blogSchema = new mongoose.Schema({
                 },
             }
         ],
-        dislikes: [
-            {
-                disliker: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "users",
-                    required: true,
-                },
-            }
-        ],
         views: {
             type: Number,
             required: true,

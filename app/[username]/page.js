@@ -29,6 +29,7 @@ const Page = async ({ params }) => {
 
 
     const userData = await getUserData(username);
+    // console.log(userData);
     // console.log(`jo bhai aa chhe ${userData.user.name}`);
     const joinTime = calculateJoinTime(userData.user.createdAt);
 
@@ -48,14 +49,24 @@ const Page = async ({ params }) => {
                         </div>
                         <div className="sm:w-2/3 sm:pl-8 sm:py-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left">
                             <h1 className='text-gray-200 text-4xl font-bold'>{userData.user.name}</h1>
-                            <h2 className='text-gray-300 mt-1 text-xl'>@{userData.user.username}</h2>
-
-                            <div>
-                                    
-                            </div>
-
+                            <h2 className='text-gray-400 mt-1 text-xl'>@{userData.user.username}</h2>
+                            
                             <h3 className='my-7'>Joined on {joinTime.month}, {joinTime.year}</h3>
 
+                            <div className='flex flex-row  mt-8 gap-10'>
+                                <div className='flex flex-col justify-center items-center'>
+                                    <h3 className='text-2xl text-gray-300 font-semibold'>{userData.blogs.length}</h3>
+                                    <h3 className='text-base'>{userData.blogs.length <= 1 ? "Blog" : "Blogs"}</h3>
+                                </div>
+                                <div className='flex flex-col justify-center items-center'>
+                                    <h3 className='text-2xl text-gray-300 font-semibold'>{userData.user.total_blog_views}</h3>
+                                    <h3 className='text-base'>{userData.user.total_blog_views <= 1 ? "View" : "Views"}</h3>
+                                </div>
+                                <div className='flex flex-col justify-center items-center'>
+                                    <h3 className='text-2xl text-gray-300 font-semibold'>{userData.user.total_likes}</h3>
+                                    <h3 className='text-base'>{userData.user.total_likes <= 1 ? "Like" : "Likes"}</h3>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -66,7 +77,7 @@ const Page = async ({ params }) => {
             </div>
 
             <div className=' container w-full'>
-                <div className="flex justify-start flex-wrap mx-20">
+                <div className="flex flex-row flex-wrap gap-6 mx-20">
                     {
                         userData.blogs.map((blog) => {
                             const creationTime = calculateJoinTime(blog.createdAt);
