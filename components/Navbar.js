@@ -44,7 +44,7 @@ const Navbar = async () => {
         {session ? (
           <>
             <Link href="/new-blog" className="mr-5 hover:text-white">New Blog</Link>
-            <h3 className='font-medium text-xl text-gray-200 mr-2 flex flex-row items-center justify-center'>{session.user.name}</h3>
+            <Link href="/@me"><h3 className='font-medium text-xl text-gray-200 mr-2 flex flex-row items-center justify-center'>{session.user.name}</h3></Link>
             <Link className="inline-flex text-lg items-center font-semibold border-0 py-1 px-3 mr-4 focus:outline-none hover:bg-gray-700 rounded mt-4 md:mt-0" href="/api/auth/signout?callbackUrl=/">Logout</Link>
             {/* <Menu as="div" className="relative inline-block text-left">
               <div>

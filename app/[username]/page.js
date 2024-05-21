@@ -50,34 +50,44 @@ const Page = async ({ params }) => {
                             <h1 className='text-gray-200 text-4xl font-bold'>{userData.user.name}</h1>
                             <h2 className='text-gray-300 mt-1 text-xl'>@{userData.user.username}</h2>
 
-                            <h3 className='mt-7'>Joined on {joinTime.month}, {joinTime.year}</h3>
+                            <div>
+                                    
+                            </div>
+
+                            <h3 className='my-7'>Joined on {joinTime.month}, {joinTime.year}</h3>
 
                         </div>
                     </div>
                 </section>
             </div>
 
-            <div className=' container w-full lg:ml-20 mx-auto flex justify-center'>
-            <div className="mx-auto flex justify-start flex-wrap m-14">
-                {
-                    userData.blogs.map((blog) => {
-                        const creationTime = calculateJoinTime(blog.createdAt);
-                        return (
-                            <Blog_card
-                                key={blog._id} 
-                                month={creationTime.month}
-                                date={creationTime.date}
-                                blog={blog}
-                                category={blog.category[0]}
-                                title={blog.title}
-                                description={blog.blog}
-                                author={userData.user.name}
-                            />
-                        )
-                    })
-                }
-            </div></div>
+            <div className='mx-28 flex justify-start mb-20'>
+                <h1 className='text-gray-300 font-bold text-3xl'>Blogs</h1>
+            </div>
 
+            <div className=' container w-full'>
+                <div className="flex justify-start flex-wrap mx-20">
+                    {
+                        userData.blogs.map((blog) => {
+                            const creationTime = calculateJoinTime(blog.createdAt);
+                            return (
+                                <Blog_card
+                                    key={blog._id}
+                                    month={creationTime.month}
+                                    date={creationTime.date}
+                                    category={blog.category[0]}
+                                    title={blog.title}
+                                    description={blog.blog}
+                                    author={userData.user.name}
+                                    likes={blog.likes}
+                                    dislikes={blog.dislikes}
+                                    comments={blog.comments}
+                                />
+                            )
+                        })
+                    }
+                </div>
+            </div>
         </>
     )
 }

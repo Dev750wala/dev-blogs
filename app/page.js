@@ -21,7 +21,7 @@ export default async function Home() {
       {session ? <section className="text-gray-600 body-font">
         <div className="container px-28 py-24 mx-auto">
           <div className="flex flex-wrap -mx-4 -my-8">
-            <Blog_card />
+            {/* <Blog_card /> */}
           </div>
         </div>
       </section> : <h1 className="text-stone-500 text-3xl tracking-wide m-20 pb-40 font-semibold mb-6 flex justify-center items-center"> Please &nbsp;<Link className="text-stone-400" href={"/api/auth/signin"}>log in</Link>&nbsp; to see the content</h1>}

@@ -33,6 +33,26 @@ const userSchema = new mongoose.Schema({
             required: true,
             default: process.env.DEF_PW,
         },
+        total_blogs: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
+        total_likes: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
+        total_comments: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
+        total_blog_views: {
+            type: Number,
+            required: true,
+            default: 0,
+        }
     }, { timestamps: true }
 )
 
