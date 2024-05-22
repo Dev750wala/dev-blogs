@@ -1,9 +1,9 @@
 import USER from "@/utils/user-model";
 import BLOG from "@/utils/blog-model";
-import { dbConnect, dbDisconnect } from "@/utils/connectionToDb";
+import { dbConnect, dbDisconnect } from "@/utils/connnectionToDb";
 import { NextResponse } from "next/server";
 
-export async function GET(request) {
+export async function POST(request) {
     await dbConnect();
 
     const { blog_id, session } = await request.json();
