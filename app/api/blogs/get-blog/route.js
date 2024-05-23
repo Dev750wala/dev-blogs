@@ -1,10 +1,15 @@
+"use server"
 import USER from "@/utils/user-model";
 import BLOG from "@/utils/blog-model";
 import { dbConnect, dbDisconnect } from "@/utils/connnectionToDb";
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { options } from "../../auth/[...nextauth]/option";
 
 export async function POST(request) {
     await dbConnect();
+    const session_demo = await getServerSession(options);
+    console.log(`DEVDEVDEVDEVDEVDEVDEVDEV${session_demo}`);
 
     const { blog_id, session } = await request.json();
 

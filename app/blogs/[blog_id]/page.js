@@ -1,4 +1,3 @@
-"get client"
 import Navbar from "@/components/Navbar";
 import React from 'react'
 import { getServerSession } from "next-auth";
@@ -6,6 +5,7 @@ import { options } from "@/app/api/auth/[...nextauth]/option";
 import axios from "axios";
 import Link from "next/link";
 import Comment from "@/components/Comment";
+// import { useState } from "react";
 
 const getBlogData = async function (blog_id) {
     try {
@@ -24,8 +24,30 @@ const getBlogData = async function (blog_id) {
     }
 }
 
+// API call to get the comments data on the blog
+// TODO bhai aa getComments nu badhu pachhi karje,
+// const getComments = async function (comment_array) {
+//     try {
+//         const response = await axios.post("http://localhost:3000/api/blogs/comments", {
+//             comments: comment_array,
+//         })
+//     } catch (error) {
+//         console.log(error);
+//         return null;
+//     }
+// }
+
 const page = async ({ params }) => {
-    // const data = await getBlogData(params.blog_id);
+   
+    // const [allComments, setAllComments] = useState([]);
+    // const [currentComment, setCurrentComment] = useState("");
+
+    const handleCurrentCommentChange = function (e) {
+        console.log(currentComment);
+        setCurrentComment(e.target.value);
+    }
+
+    const data_demo = await getBlogData(params.blog_id);
     const data = {
         blog: {
             _id: '664c5bd209313d3245754152',
@@ -89,7 +111,7 @@ const page = async ({ params }) => {
 
             {/* blog description */}
             <div className="container flex flex-col lg:w-[50%] mx-auto lg:px-3 my-20">
-                <p class="mb-3 text-gray-500 dark:text-gray-400 first-line:tracking-wide first-letter:text-7xl first-letter:font-bold first-letter:text-gray-900 dark:first-letter:text-gray-100 first-letter:me-3 first-letter:float-start">{data.blog.blog}</p>
+                <p className="mb-3 text-gray-500 dark:text-gray-400 first-line:tracking-wide first-letter:text-7xl first-letter:font-bold first-letter:text-gray-900 dark:first-letter:text-gray-100 first-letter:me-3 first-letter:float-start">{data.blog.blog}</p>
             </div>
 
             {/* blog comments */}
@@ -98,7 +120,7 @@ const page = async ({ params }) => {
 
                 {/* to comment on the blog */}
                 <div className="flex flex-row gap-2 justify-between">
-                    <input type="text" placeholder="Add a comment..." class="bg-transparent border-b-2 border-gray-500 focus:border-gray-200 w-[85%] transition-colors focus:outline-none text-gray-200 text-base" />
+                    <input type="text"  placeholder="Add a comment..." className="bg-transparent border-b-2 border-gray-500 focus:border-gray-200 w-[85%] transition-colors focus:outline-none text-gray-200 text-base" />
                     <button className="bg-blue-500 hover:bg-blue-600 transition-all text-white px-4 py-2 rounded-full text-sm font-bold">Comment</button>
                 </div>
 
