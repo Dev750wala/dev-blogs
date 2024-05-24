@@ -5,37 +5,62 @@ import { options } from "@/app/api/auth/[...nextauth]/option";
 import axios from "axios";
 import Link from "next/link";
 import Comment from "@/components/Comment";
+// import { headers } from "next/headers";
+// import { headers } from "next/headers";
 // import { useState } from "react";
+import { NextResponse } from "next/server";
+import { dbConnect, dbDisconnect } from "@/utils/connnectionToDb";
+import USER from "@/utils/user-model";
+import BLOG from "@/utils/blog-model";
+import { response } from "express";
+
 
 const getBlogData = async function (blog_id) {
-    try {
-        const session = await getServerSession(options);
+    "use server"
+    await dbConnect();  
+    const session = await getServerSession(options);
+    // console.log(`DEVDEVDEVDEV${JSON.stringify(session)}`);
 
-        const response = await axios.post("http://localhost:3000/api/blogs/get-blog", {
+    try {
+        let user;
+        if (session) {
+            user = await USER.findOne({
+                email: session.user.email,
+            });
+        }
+
+        const blog = await BLOG.findOne({
             blog_id: blog_id,
-            session: session,
         });
-        console.log(response.data);
-        // console.log(`jo bhai aa data ${JSON.stringify(response.data)}`);
-        return response.data;
+
+        if (!blog) {
+            return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+        }
+
+        await BLOG.findOneAndUpdate(
+            { blog_id: blog_id },
+            { $inc: { views: 1 } }
+        );
+
+        const author = await USER.findByIdAndUpdate(
+            blog.author,
+            { $inc: { total_blog_views: 1 } },
+            { new: true }
+        );
+
+        return {
+            blog: blog,
+            author: author,
+            status: 200,
+        };
+
     } catch (error) {
-        console.log(error);
-        return null;
+        console.error(error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    } finally {
+        dbDisconnect();
     }
 }
-
-// API call to get the comments data on the blog
-// TODO bhai aa getComments nu badhu pachhi karje,
-// const getComments = async function (comment_array) {
-//     try {
-//         const response = await axios.post("http://localhost:3000/api/blogs/comments", {
-//             comments: comment_array,
-//         })
-//     } catch (error) {
-//         console.log(error);
-//         return null;
-//     }
-// }
 
 const page = async ({ params }) => {
    
@@ -47,41 +72,42 @@ const page = async ({ params }) => {
         setCurrentComment(e.target.value);
     }
 
-    const data_demo = await getBlogData(params.blog_id);
-    const data = {
-        blog: {
-            _id: '664c5bd209313d3245754152',
-            blog_id: 'vKuPjNO2Lccz-te',
-            title: 'Lorem Ipsum',
-            blog: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book",
-            category: ['Technology'],
-            author: '664c410309313d3245754108',
-            views: 8,
-            comments: [],
-            likes: [],
-            dislikes: [],
-            creationDate: '2024-05-21T08:31:14.952Z',
-            createdAt: '2024-05-21T08:31:14.966Z',
-            updatedAt: '2024-05-21T19:15:15.085Z',
-            __v: 0
-        },
-        author: {
-            total_blogs: 0,
-            _id: '664c410309313d3245754108',
-            username: 'dev750wala',
-            name: 'Dev Sadisatsowala',
-            email: 'sadisatsowaladev1@gmail.com',
-            githubId: 117472132,
-            oAuthProvider: 'github',
-            password: 'ei1tkGzWHBPrtKyaeO9Q+v4bqLlyeKdXkTiDV63Kt0s=',
-            total_likes: 0,
-            total_comments: 0,
-            total_blog_views: 9,
-            createdAt: '2024-05-21T06:36:51.905Z',
-            updatedAt: '2024-05-21T19:16:02.853Z',
-            __v: 0
-        }
-    };
+    const data = (await getBlogData(params.blog_id));
+    // console.log(`jo bhai aa data ${JSON.stringify(data_demo)}`);
+    // const data = {
+    //     blog: {
+    //         _id: '664c5bd209313d3245754152',
+    //         blog_id: 'vKuPjNO2Lccz-te',
+    //         title: 'Lorem Ipsum',
+    //         blog: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book",
+    //         category: ['Technology'],
+    //         author: '664c410309313d3245754108',
+    //         views: 8,
+    //         comments: [],
+    //         likes: [],
+    //         dislikes: [],
+    //         creationDate: '2024-05-21T08:31:14.952Z',
+    //         createdAt: '2024-05-21T08:31:14.966Z',
+    //         updatedAt: '2024-05-21T19:15:15.085Z',
+    //         __v: 0
+    //     },
+    //     author: {
+    //         total_blogs: 0,
+    //         _id: '664c410309313d3245754108',
+    //         username: 'dev750wala',
+    //         name: 'Dev Sadisatsowala',
+    //         email: 'sadisatsowaladev1@gmail.com',
+    //         githubId: 117472132,
+    //         oAuthProvider: 'github',
+    //         password: 'ei1tkGzWHBPrtKyaeO9Q+v4bqLlyeKdXkTiDV63Kt0s=',
+    //         total_likes: 0,
+    //         total_comments: 0,
+    //         total_blog_views: 9,
+    //         createdAt: '2024-05-21T06:36:51.905Z',
+    //         updatedAt: '2024-05-21T19:16:02.853Z',
+    //         __v: 0
+    //     }
+    // };
 
 
     return (

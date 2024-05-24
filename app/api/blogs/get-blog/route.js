@@ -8,10 +8,20 @@ import { options } from "../../auth/[...nextauth]/option";
 
 export async function POST(request) {
     await dbConnect();
-    const session_demo = await getServerSession(options);
-    console.log(`DEVDEVDEVDEVDEVDEVDEVDEV${session_demo}`);
 
-    const { blog_id, session } = await request.json();
+    // Log the entire request object for debugging
+    // console.log("Request object:", request);
+
+    // Read and parse the request body
+    const body = await request.json();
+
+    // Log the parsed request body
+    console.log("Request body:", body);
+
+    const session_demo = await getServerSession({req: request, ...options});
+    console.log(`DEVDEVDEVDEV${JSON.stringify(session_demo)}`);
+    
+    const { blog_id, session } = body;  // Use parsed body here
 
     try {
         let user;
@@ -46,7 +56,7 @@ export async function POST(request) {
         });
 
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     } finally {
         dbDisconnect();
