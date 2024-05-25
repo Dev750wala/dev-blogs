@@ -11,7 +11,7 @@ const Comment = () => {
             </div>
             <div className='flex flex-col'>
                 <p className='text-gray-300 text-base font-semibold'>Dev Sadisatsowala</p>
-                <p className='text-gray-500'>This is the most sick blog I have ever read.</p>
+                <p className='text-gray-500'>Dummy comment btw...</p>
             </div>
         </div>
     )

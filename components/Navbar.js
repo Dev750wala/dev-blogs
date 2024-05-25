@@ -1,3 +1,5 @@
+// "use client"
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import React from 'react';
 import { getServerSession } from 'next-auth';
@@ -7,7 +9,10 @@ import { options } from '@/app/api/auth/[...nextauth]/option';
 const Navbar = async () => {
   
   const session = await getServerSession(options);
-  // const session = {
+  // const session = useSession(options)
+  // const { data: session } = useSession()
+  // console.log(session);
+  // const session = {`
   //   user: {
   //     name: "Dev",
   //     email: "dev@gmail.com",
