@@ -1,26 +1,25 @@
-// "use client"
+"use client"
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import React from 'react';
-import { getServerSession } from 'next-auth';
-import { options } from '@/app/api/auth/[...nextauth]/option';
+import { useEffect } from 'react';
 
+const Navbar = () => {
+  const { data: session, status} = useSession({
+    required: true,
+  });
 
-const Navbar = async () => {
-  
-  const session = await getServerSession(options);
-  // const session = useSession(options)
-  // const { data: session } = useSession()
-  // console.log(session);
-  // const session = {`
+  if( status === "loading" ) {
+    return <h1 className='text-white'>LOADING</h1>
+  }
+
+  // const session = {
   //   user: {
   //     name: "Dev",
   //     email: "dev@gmail.com",
   //     role: "Unverified Email"
   //   }
   // }
-
-  console.log(`DEMO DEMO ${JSON.stringify(session)}`);
 
   return (
     <header className="text-gray-500 backdrop-blur-md border-b border-slate-900 sticky top-0 z-10 shadow-2xl body-font">

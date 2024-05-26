@@ -128,6 +128,9 @@ export const options = {
             clientSecret: process.env.GOOGLE_SECRET,
         }),
     ],
+    session: {
+        jwt: true,
+    },
     callbacks: {
         async jwt({ token, user }) {
             if (user) token.role = user.role;

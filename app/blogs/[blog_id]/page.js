@@ -1,37 +1,20 @@
-// "use client"
-import Navbar from "@/components/Navbar";
+"use client"
 import React from 'react'
-import { getServerSession } from "next-auth";
 import { getSession } from "next-auth/react"
-import { options } from "@/app/api/auth/[...nextauth]/option";
 import axios from "axios";
 import Link from "next/link";
 import Comment from "@/components/Comment";
-// import { headers } from "next/headers";
-// import { useState } from "react";
-import { NextResponse } from "next/server";
-import { dbConnect, dbDisconnect } from "@/utils/connnectionToDb";
-// import USER from "@/utils/user-model";
-// import BLOG from "@/utils/blog-model";
-// import { response } from "express";
+import Navbar from '@/components/Navbar';
+import { useEffect, useState } from 'react';
+
+// const getBlogData = async (blog_id) => {
+    
+// };
 
 
-const getBlogData = async function (blog_id) {
-    const session = await getServerSession(options);
+const page = ({ params }) => {
+    const [blog, setBlog] = useState({});
 
-    // Await the axios.post request to correctly get the response data
-    const { data } = await axios.post("http://localhost:3000/api/blogs/get-blog", {
-        blog_id: blog_id,
-        session: session,
-    });
-
-    return data;
-}
-
-const page = async ({ params }) => {
-
-    const data_demo = (await getBlogData(params.blog_id));
-    console.log(`jo bhai aa data ${JSON.stringify(data_demo)}`);
     const data = {
         blog: {
             _id: '664c5bd209313d3245754152',
@@ -67,6 +50,26 @@ const page = async ({ params }) => {
         }
     };
 
+    useEffect(() => {
+        const fetchBlogData = async () => {
+            try {
+                const response = await axios.post("http://localhost:3000/api/blogs/get-blog", {
+                    blog_id: params.blog_id,
+                });
+                setBlog(response.data);
+                console.log(response.data);
+            } catch (error) {
+                console.error("Error fetching blog data:", error);
+            }
+        };
+
+        fetchBlogData();
+    }, [params.blog_id]); 
+    
+
+    if (!data) {
+        return <div className='text-white'>Error loading blog data</div>;
+    }
 
     return (
         <>

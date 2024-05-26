@@ -6,8 +6,8 @@ export async function dbConnect() {
     await mongoose.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    //   useCreateIndex: true, // this one is deprecated in newer versions.
     });
+    // await mongoose.connect(uri);
     console.log("Successfully connected to MongoDB Atlas!");
   } catch (error) {
     console.log("Unable to connect to MongoDB Atlas!");

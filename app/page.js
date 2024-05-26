@@ -1,20 +1,21 @@
-// "use client"
-import { SessionProvider } from "next-auth/react";
-import Blog_card from "@/components/Blog_card";
+"use client"
+// import Blog_card from "@/components/Blog_card";
 import Image from "next/image";
-import { findAllBlogs } from "@/utils/find-all-blogs";
 import Navbar from "@/components/Navbar";
-import { getServerSession } from "next-auth";
-import { options } from "./api/auth/[...nextauth]/option";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
-export default async function Home() {
+export default function Home() {
 
-  const session = await getServerSession(options);
+  const { data: session, status} = useSession({
+    required: true,
+  });
+
+  console.log(`DEVDEVDEVDEV ${JSON.stringify(session)}`);
 
   return (
     <>
-      {/* <SessionProvider> */}
+        {/* TODO add nav to main page */}
         <Navbar />
         <div className="flex flex-col mx-auto justify-center items-center py-10 min-h-[80vh]">
           <h1 className="text-8xl text-stone-300 font-extrabold">Welcome to Dev Blogs</h1>
@@ -28,10 +29,6 @@ export default async function Home() {
             </div>
           </div>
         </section> : <h1 className="text-stone-500 text-3xl tracking-wide m-20 pb-40 font-semibold mb-6 flex justify-center items-center"> Please &nbsp;<Link className="text-stone-400" href={"/api/auth/signin"}>log in</Link>&nbsp; to see the content</h1>}
-        
-      {/* </SessionProvider> */}
     </>
   );
 }
-
-
