@@ -10,8 +10,11 @@ const Comment = () => {
 
             </div>
             <div className='flex flex-col'>
-                <p className='text-gray-300 text-base font-semibold'>Dev Sadisatsowala</p>
-                <p className='text-gray-500'>Dummy comment btw...</p>
+                <div className='flex flex-row items-center gap-2'>
+                    <p className='text-gray-300 text-base font-semibold'>Dev Sadisatsowala</p>
+                    <p className='text-gray-500 text-xs'>5 years ago</p>
+                </div>
+                <p className='text-gray-400'>Dummy comment btw...</p>
             </div>
         </div>
     )

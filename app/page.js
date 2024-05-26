@@ -4,12 +4,20 @@ import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function Home() {
 
   const { data: session, status} = useSession({
     required: true,
   });
+
+  // useEffect(() => {
+  //   alert(session)
+  
+    
+  // }, [])
+  
 
   console.log(`DEVDEVDEVDEV ${JSON.stringify(session)}`);
 
