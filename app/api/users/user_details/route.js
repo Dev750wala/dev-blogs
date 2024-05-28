@@ -2,11 +2,15 @@ import USER from "@/utils/user-model";
 import { dbConnect, dbDisconnect } from "@/utils/connnectionToDb";
 import { NextResponse } from "next/server";
 import BLOG from "@/utils/blog-model";
+import { options } from "../../auth/[...nextauth]/option";
+import { getServerSession } from "next-auth";
+import { response } from "express";
 
 export async function POST(request) {
     await dbConnect();
-    const {username, session} = await request.json();
-    // console.log(name);
+    const session = await getServerSession(options);
+    const {username, } = await request.json();
+    console.log(`DEVDEVDEVDEVDEVDEVDEVDEV${username}`);
 
     try {
         if (username === "@me") {
@@ -17,7 +21,11 @@ export async function POST(request) {
                 const blogs = await BLOG.find({ author: user._id })
 
                 // console.log(blogs);
-
+                const reponse = {
+                    user: user,
+                    blogs: blogs,
+                }
+                // console.log(response);
                 return NextResponse.json({
                     user: user,
                     blogs: blogs,
@@ -38,9 +46,9 @@ export async function POST(request) {
         }
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ error: "User not found" });
+        return NextResponse.json({ error: "Unexpected error occured" });
     } 
-    finally {
-        dbDisconnect();
-    }
+    // finally {
+    //     dbDisconnect();
+    // }
 }
