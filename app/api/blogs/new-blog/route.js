@@ -12,6 +12,15 @@ export async function POST(request) {
         const { title, content, categories } = await request.json();
         const session = await getServerSession(options);
 
+        // console.log(session);
+        // {
+        //     user: {
+        //       name: 'Dev Sadisatsowala',
+        //       email: 'sadisatsowaladev1@gmail.com',
+        //       image: undefined,
+        //       role: 'Github User'
+        //     }
+        //  }
         if (!session || !session.user || !session.user.email) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }

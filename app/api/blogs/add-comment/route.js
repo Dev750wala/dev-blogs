@@ -3,7 +3,7 @@ import BLOG from "@/utils/blog-model";
 import { dbConnect, dbDisconnect } from "@/utils/connnectionToDb";
 import { getServerSession } from "next-auth";
 import { options } from "../../auth/[...nextauth]/option";
-import { NextResponse } from "next/server"; 
+import { NextResponse } from "next/server";
 
 export async function POST(request) {
     await dbConnect();
@@ -18,9 +18,7 @@ export async function POST(request) {
     const { comment, blog_id } = data;
 
     try {
-        const commenter = await USER.findOne({
-            email: session.user.email,
-        });
+        const commenter = await USER.findOne({ email: session.user.email });
 
         if (!commenter) {
             throw new Error('User not found');
@@ -28,30 +26,21 @@ export async function POST(request) {
 
         const blog = await BLOG.findOneAndUpdate(
             { blog_id: blog_id },
-            {
-                $push: {
-                    comments: {
-                        commenter: commenter._id,
-                        comment: comment,
-                    },
-                },
-            },
-            { new: true } 
+            { $push: { comments: { commenter: commenter._id, comment: comment } } },
+            { new: true }
         );
 
         if (!blog) {
             throw new Error('Blog not found');
         }
 
-        const author = await USER.findByIdAndUpdate(
-            blog.author,
-            { $inc: { total_comments: 1 } },
-            { new: true } 
-        );
+        await USER.findByIdAndUpdate(blog.author, { $inc: { total_comments: 1 } }, { new: true });
 
         return NextResponse.json({
-            blog: blog,
-            author: author,
+            commenter: commenter._id,
+            name: commenter.name,
+            username: commenter.username,
+            time: new Date().toISOString(),
         });
     } catch (error) {
         console.log(error);

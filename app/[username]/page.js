@@ -1,6 +1,7 @@
-import React from 'react'
+"use client"
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { getServerSession } from "next-auth";
+import { useSession } from 'next-auth/react';
 import { options } from '../api/auth/[...nextauth]/option';
 import calculateJoinTime from '@/utils/calculateJoinTime';
 import Blog_card from '@/components/Blog_card';
@@ -25,8 +26,31 @@ const getUserData = async function (username) {
 const Page = async ({ params }) => {
     const username = decodeURIComponent(params.username);
 
-    console.log("Hello World");
+    // console.log("Hello World");
+    const { data: session, status } = useSession();
 
+    useEffect(() => {
+      if( status === "loading" ) {
+        return <h1 className='text-white'>LOADING</h1>
+      }
+      
+      if( status === "unauthenticated" ) {
+        return <h1 className='text-white'>UNAUTHENTICATED</h1>
+      }
+      
+      if( status === "error" ) {
+        return <h1 className='text-white'>ERROR</h1>
+      }
+      
+      if( status === "authenticated" ) {
+        return <h1 className='text-white'>AUTHENTICATED</h1>
+      }
+      
+      
+    
+      
+    }, [])
+    
 
     const userData = await getUserData(username);
     // console.log(userData);

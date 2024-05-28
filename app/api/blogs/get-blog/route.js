@@ -38,13 +38,20 @@ export async function POST(request) {
             { new: true }
         );
 
-        return NextResponse.json({ blog, author });
+        const likes = blog.likes;
+        const likedTheBlog = likes.find((like) => like.liker.toString() === user._id.toString());
+
+        return NextResponse.json({ 
+            blog: blog, 
+            author: author,
+            liked: likedTheBlog ? true : false,
+        });
 
     } catch (error) {
         console.error('Error in POST handler:', error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     } 
     // finally {
-    //     await dbDisconnect();  // Ensure DB is disconnected after the operation
+    //     await dbDisconnect();
     // }
 }

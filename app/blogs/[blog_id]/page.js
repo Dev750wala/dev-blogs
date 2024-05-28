@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { getSession } from "next-auth/react"
+import { getSession, useSession } from "next-auth/react"
 import axios from "axios";
 import Link from "next/link";
 import Comment from "@/components/Comment";
@@ -8,27 +8,15 @@ import Navbar from '@/components/Navbar';
 import { useEffect, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 
-const getComments = async (comment_array) => {
-    try {
-        const response = await axios.post("http://localhost:3000/api/blogs/get-comments", {
-            comments: comment_array,
-        });
-
-        const final_comments = response.data;
-        // console.log(final_comments);
-        return final_comments; 
-    } catch (error) {
-        console.error('Error fetching comments:', error);
-        throw error; 
-    }
-}
-
-
 const page = ({ params }) => {
     const [data, setData] = useState({});
     const [comments, setComments] = useState([]);
     const [final_comments, setFinalComments] = useState([]);
     const [currentComment, setCurrentComment] = useState("");
+    const [totalComments, setTotalComments] = useState(0);
+    const [liked, setLiked] = useState(false);
+    const [totalLikes, setTotalLikes] = useState(0);
+
 
     // const data = {
     //     blog: {
@@ -71,51 +59,125 @@ const page = ({ params }) => {
                 const response = await axios.post("http://localhost:3000/api/blogs/get-blog", {
                     blog_id: params.blog_id,
                 });
-                const temp = {
+                setData({
                     blog: response.data.blog,
-                    author: response.data.author
-                };
-                setData(temp);
+                    author: response.data.author,
+                });
+                setLiked(response.data.liked)
             } catch (error) {
                 console.error("Error fetching blog data:", error);
             }
-        };
-
-        fetchBlogData();
+        }; fetchBlogData();
     }, [params.blog_id]);
 
-    useEffect(() => {
-        setComments(data?.blog?.comments);
-        console.log(JSON.stringify(comments));
-    }, [data])
 
     useEffect(() => {
-        const response = getComments(comments);
-        setFinalComments(response);
+        if (data?.blog?.comments) {
+            setComments(data.blog.comments);
+        }
+        setTotalLikes(data?.blog?.likes?.length)
+    }, [data]);
+
+
+    useEffect(() => {
+        const fetchComments = async () => {
+            if (comments.length > 0) {
+                try {
+                    const response = await axios.post("http://localhost:3000/api/blogs/get-comments", {
+                        comments: comments,
+                    });
+                    const fetchedComments = response.data;
+                    // console.log(fetchedComments.comments);
+
+                    setFinalComments(fetchedComments.comments);
+                    setTotalComments(fetchedComments.comments.length);
+                } catch (error) {
+                    console.error("Error fetching final comments:", error);
+                }
+            }
+        };
+        fetchComments();
     }, [comments]);
 
-    const handleCurrentComment = function (e) {
+
+    const handleCurrentComment = (e) => {
         setCurrentComment(e.target.value);
-        console.log(currentComment);
     };
 
-    const submitComment = async () => {
-        
-        try {
-            const response = await axios.post(
-                {
-                    comment: currentComment,
-                    blog_id: data.blog.blog_id,
-                }
-            )
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
-    if (!data) {
-        return <div className='text-white'>Error loading blog data</div>;
-    }
+    const submitComment = async () => {
+
+        if (currentComment === "") {
+            return;
+        }
+        try {
+            const response = await axios.post("http://localhost:3000/api/blogs/add-comment", {
+                comment: currentComment,
+                blog_id: data.blog.blog_id,
+            });
+
+            const responseData = response.data;
+            if (responseData) {
+                setFinalComments(prevComments => {
+                    return [
+                        {
+                            comment: currentComment,
+                            commenter: responseData.commenter,
+                            username: responseData.username,
+                            name: responseData.name,
+                            commentDate: responseData.time,
+                        },
+                        ...prevComments,
+                    ];
+                });
+                setTotalComments(totalComments + 1);
+                setCurrentComment("");
+            }
+        } catch (error) {
+            console.error("Error submitting comment:", error);
+        }
+    };
+
+    const handleLikeClick = async () => {
+        if (liked) {
+            setLiked(false);
+            setTotalLikes(totalLikes - 1);
+            try {
+                const response = await axios.post("http://localhost:3000/api/blogs/remove-like", {
+                    blog_id: data.blog.blog_id,
+                    author: data.blog.author,
+                });
+            } catch (error) {
+                console.error("Error removing like:", error);
+                // Revert state change on error
+                setLiked(true);
+                setTotalLikes(totalLikes + 1);
+            }
+        } else {
+            setLiked(true);
+            setTotalLikes(totalLikes + 1);
+            try {
+                const response = await axios.post("http://localhost:3000/api/blogs/add-like", {
+                    blog_id: data.blog.blog_id,
+                    author: data.blog.author,
+                });
+            } catch (error) {
+                console.error("Error adding like:", error);
+                // Revert state change on error
+                setLiked(false);
+                setTotalLikes(totalLikes - 1);
+            }
+        }
+    };
+    
+    // if (!data) {
+    //     return (
+    //         <div className='w-full h-full flex flex-row justify-center items-center'>
+    //             <Loader />
+    //             <h1 className='text-6xl text-white'></h1>
+    //         </div>
+    //     )
+    // }
 
     return (
         <>
@@ -139,10 +201,13 @@ const page = ({ params }) => {
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                     </svg>
                                         {data.blog.views}</h2>
-                                    <h2 className="text-gray-400 text-lg my-4 flex flex-row items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
-                                    </svg>
-                                        {data.blog.likes.length}</h2>
+                                    <h2 className="text-gray-400 text-lg my-4 flex flex-row items-center gap-1">
+                                        <button onClick={handleLikeClick}>
+                                            <svg class="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill={liked ? "currentcolor" : "none"} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
+                                            </svg>
+                                        </button>
+                                        {totalLikes}
+                                    </h2>
                                 </div>
                             </div>
                         </div>
@@ -154,7 +219,8 @@ const page = ({ params }) => {
 
                         {/* blog comments */}
                         <div className="container flex flex-col lg:w-[50%] mx-auto lg:px-3 my-20">
-                            <h1 className="text-xl font-bold my-10 text-gray-400">{data.blog.comments.length}&nbsp;Comments</h1>
+                            <h1 className="text-xl font-bold my-10 text-gray-400">{totalComments}&nbsp;Comments
+                            </h1>
 
                             {/* to comment on the blog */}
                             <div className="flex flex-row gap-2 justify-between">
@@ -164,19 +230,22 @@ const page = ({ params }) => {
 
                             {/* previous comments */}
                             <div className="">
-                                <Comment />
-                                <Comment />
-                                <Comment />
-                                <Comment />
-                                <Comment />
-                                <Comment />
+                                {Array.isArray(final_comments) && final_comments.map(comment => (
+                                    <Comment
+                                        key={comment.id}  // Ensure each child has a unique key
+                                        name={comment.name}
+                                        time={comment.commentDate ? formatDistanceToNow(new Date(comment.commentDate), { addSuffix: true }) : ''}
+                                        comment={comment.comment}
+                                        username={comment.username}
+                                    />
+                                ))}
                             </div>
+
                         </div>
                     </>
                 )
             }
         </>
-
     )
 }
 
