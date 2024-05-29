@@ -6,7 +6,7 @@ import Blog_card from '@/components/Blog_card';
 
 const Page = ({ params }) => {
     const username = decodeURIComponent(params.username);
-
+    console.log("hello World");
     const [userData, setUserData] = useState(null);
     const [joinTime, setJoinTime] = useState(null);
 
