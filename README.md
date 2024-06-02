@@ -36,7 +36,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## TODO
 1) all the operations on blog. get, post, update, patch, delete
-2) user profile page
-3) change the whole UI.
-4) user profile photos upload.
-5) blog features. like, comment.
+2) user profile photos upload.
+3) user profile update.
+4) create canvas for showing likes on blog.
