@@ -6,6 +6,7 @@ import USER from "@/utils/user-model";
 import { dbConnect, dbDisconnect } from "@/utils/connnectionToDb";
 import { nanoid } from "nanoid";
 
+
 export async function POST(request) {
     try {
         await dbConnect();
