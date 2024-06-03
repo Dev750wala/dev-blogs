@@ -8,7 +8,6 @@ import Navbar from '@/components/Navbar';
 import { useEffect, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 
-
 const page = ({ params }) => {
     const [data, setData] = useState({});
     const [comments, setComments] = useState([]);

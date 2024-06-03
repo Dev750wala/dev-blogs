@@ -6,6 +6,7 @@ import { options } from "../../auth/[...nextauth]/option";
 import { getServerSession } from "next-auth";
 import { response } from "express";
 
+
 export async function POST(request) {
     await dbConnect();
     const session = await getServerSession(options);

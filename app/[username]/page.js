@@ -4,7 +4,6 @@ import axios from 'axios'
 import calculateJoinTime from '@/utils/calculateJoinTime';
 import Blog_card from '@/components/Blog_card';
 
-
 const Page = ({ params }) => {
     const username = decodeURIComponent(params.username);
     const [userData, setUserData] = useState(null);
