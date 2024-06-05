@@ -39,6 +39,7 @@ export async function POST(request) {
             const blogs = await BLOG.find({ author: user._id })
 
             // console.log(blogs);
+            console.log("hello world");
 
             return NextResponse.json({
                 user: user,
