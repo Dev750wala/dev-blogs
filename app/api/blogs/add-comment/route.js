@@ -12,9 +12,10 @@ export async function POST(request) {
     const session = await getServerSession(options);
 
     if (!session) {
+        console.log("session not found");
         return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
-
+    
     const { comment, blog_id } = data;
 
     try {
