@@ -15,7 +15,7 @@ export async function POST(request) {
         console.log("session not found");
         return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
-    
+
     const { comment, blog_id } = data;
 
     try {

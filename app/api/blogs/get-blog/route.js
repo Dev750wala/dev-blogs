@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth";
 import { options } from "../../auth/[...nextauth]/option";
 
 export async function POST(request) {
-    
+
     try {
         await dbConnect(); 
         const body = await request.json();
