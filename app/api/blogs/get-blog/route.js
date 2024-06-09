@@ -10,7 +10,7 @@ export async function POST(request) {
     try {
         await dbConnect(); 
         const body = await request.json();
-        console.log("Request body:", body);
+        // console.log("Request body:", body);
 
         const session = await getServerSession({ req: request, ...options });
         console.log(`Session info: ${JSON.stringify(session)}`);
