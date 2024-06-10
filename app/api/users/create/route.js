@@ -12,7 +12,6 @@ export async function POST(request) {
         // username: "",
         email: "",
     }
-    // console.log(`${uri} !!!!!!!!!!!!!!!!!devdevdevdev`);
     
     try {
         const user = await USER.findOne({ email: data.email });

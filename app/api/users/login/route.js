@@ -22,6 +22,7 @@ export async function POST(request) {
             //     credentials.password,
             //     foundUser.password
             //   );
+            // TODO
 
             if (data.password === foundUser.password) {
                 console.log("hello world 4");
