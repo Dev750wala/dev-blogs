@@ -16,7 +16,7 @@ const Page = ({ params }) => {
                     username: username,
                 });
                 const data = response.data;
-                // console.log(JSON.stringify(data));
+                console.log(JSON.stringify(data));
                 setUserData(data);
                 setJoinTime(calculateJoinTime(data.user.createdAt));
                 

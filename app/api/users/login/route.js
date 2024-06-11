@@ -16,8 +16,8 @@ export async function POST(request) {
         console.log("hello world 2");
 
         if (foundUser) {
-            console.log("hello world 3");
-            console.log("User Exists");
+            // console.log("hello world 3");
+            console.log("User exists");
             //   const match = await bcrypt.compare(
             //     credentials.password,
             //     foundUser.password
