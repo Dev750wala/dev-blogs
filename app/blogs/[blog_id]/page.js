@@ -17,7 +17,6 @@ const page = ({ params }) => {
     const [liked, setLiked] = useState(false);
     const [totalLikes, setTotalLikes] = useState(0);
 
-
     // const data = {
     //     blog: {
     //         _id: '664c5bd209313d3245754152',

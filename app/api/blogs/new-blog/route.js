@@ -12,7 +12,7 @@ export async function POST(request) {
         const { title, content, categories } = await request.json();
         const session = await getServerSession(options);
 
-        // console.log(session);
+        console.log(session);
         // {
         //     user: {
         //       name: 'Dev Sadisatsowala',
