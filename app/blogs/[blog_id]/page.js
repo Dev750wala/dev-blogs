@@ -89,6 +89,8 @@ const page = ({ params }) => {
                 const response = await axios.post("http://localhost:3000/api/blogs/get-likes", {
                     likes: likeData,
                 });
+                // console.log("🚀 ~ getLikeData ~ response:", JSON.stringify(response.data))
+                
                 setFinalLikeData(response.data);
             } catch (error) {
                 console.error("Error fetching like data:", error);
@@ -252,16 +254,16 @@ const page = ({ params }) => {
                                                                     </svg>
                                                                 </button>
                                                             </h3>
-                                                        </div> <hr />
+                                                        </div> <hr /> <br />
                                                         <ul>
-                                                            {likeData.map((user) => (
+                                                            {finalLikeData.map((user) => (
                                                                 <li key={user._id} className="flex items-center mb-3">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-9">
                                                                         <path fillRule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clipRule="evenodd" />
                                                                     </svg>
 
                                                                     <div className="ml-3">
-                                                                        <p className="font-bold">{user.username}</p>
+                                                                        <p className="font-medium"><Link href={`${process.env.BASE_URL}/user/${user.username}`}>{user.username}</Link></p>
                                                                         <p className="text-sm text-gray-400">{user.name}</p>
                                                                     </div>
                                                                 </li>
@@ -271,8 +273,6 @@ const page = ({ params }) => {
                                                 </div>
                                             </>
                                         )}
-
-
                                     </h2>
                                 </div>
                             </div>
